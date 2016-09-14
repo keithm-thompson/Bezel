@@ -8,7 +8,7 @@ class ControllerBase
   attr_reader :req, :res, :params, :flash
 
   def self.protect_from_forgery
-
+    @@csrf_auth = true
   end
 
   # Setup the controller
@@ -17,10 +17,16 @@ class ControllerBase
     @res = res
     @params = req.params.merge(route_params)
     @flash = Flash.new(req)
+    @params['authenticity_token'] ||= SecureRandom.base64
   end
 
   def form_authenticity_token
-    @authenticity_token = SecureRandom.base64
+    @res.set_cookie('authenticity_token',@params['authenticity_token'])
+    @params['authenticity_token']
+  end
+
+  def check_authenticity_token(token = "")
+    @params['authenticity_token'] == token
   end
 
   # Helper method to alias @already_built_response
@@ -66,7 +72,15 @@ class ControllerBase
 
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
+
+    if @@csrf_auth && @req.request_method != "GET"
+
+      unless check_authenticity_token(@req.cookies['authenticity_token'])
+        raise "Invalid authenticity token"
+      end
+    end
+
     send(name)
-    render(:index) unless already_built_response?
+    render(name) unless already_built_response?
   end
 end

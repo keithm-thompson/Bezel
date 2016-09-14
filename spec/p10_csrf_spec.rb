@@ -70,7 +70,7 @@ describe ControllerBase do
       end
 
       it "calls #check_authenticity_token" do
-        expect(dummy_controller).to receive(:check_authenticity_token)
+        expect(dummy_controller).to receive(:check_authenticity_token).and_return(true)
         dummy_controller.invoke_action(:index)
       end
 
