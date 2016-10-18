@@ -39,7 +39,7 @@ class ControllerBase
     @res.status = 302
     @res['Location'] = url
     @already_built_response = true
-    
+
     session.store_session(@res)
   end
 

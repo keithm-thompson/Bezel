@@ -1,0 +1,130 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'thor'
+
+class Generate < Thor
+  desc 'model <name>', 'generate a model with the specified name.'
+  def model(name)
+    m_name = name.capitalize
+
+    # Writes model file
+    File.open("./app/models/#{m_name.downcase}.rb", 'w') do |f|
+      f.write("class #{m_name} < Bezel::BezelrecordBase\n\n")
+      f.write("end\n")
+      f.write("#{m_name}.finalize!")
+    end
+    migration("Create#{m_name}")
+    puts "#{m_name} model created"
+  end
+
+  desc 'controller <name>', 'generate a controller with the specified name.'
+  def controller(name)
+    c_name = name.capitalize
+
+    # Writes controller file
+    File.open("./app/controllers/#{c_name.downcase}.rb", 'w') do |f|
+      f.write("class #{c_name}Controller < Bezel::ControllerBase\n\n")
+      f.write('end')
+    end
+
+    # Creates empty views directory
+    Dir.mkdir "./app/views/#{c_name.downcase}_controller"
+    puts "#{c_name} controller created"
+  end
+
+  desc 'migration <name>', 'generates an empty sql file with a filename of the specified <name> appended to a timestamp'
+  def migration(name)
+    # Create a timestamp
+    ts = Time.now.to_s.split(' ').take(2).join('').split('').map(&:to_i).join
+    require 'active_support/inflector'
+    filename = "#{ts}__#{name.underscore.downcase}"
+
+    # Create the migration file
+    File.open("./db/migrate/#{filename}.sql", 'w') do |f|
+      f.write "CREATE TABLE IF NOT EXISTS #{name} (\n"
+      f.write "\tid SERIAL PRIMARY KEY,\n"
+      f.write "\tname VARCHAR(255) NOT NULL"
+      f.write ');'
+    end
+  end
+end
+
+# Top-level command for manipulating the database file.
+class Db < Thor
+  desc 'create', 'creates the DB'
+  def create
+    require_relative '../lib/db_connection'
+    Bezel::DBConnection.reset
+    puts 'db created!'
+  end
+
+  desc 'migrate', 'runs pending migrations'
+  def migrate
+    # Creates Version table if necessary,
+    # then runs needed migrations in order.
+    require_relative '../lib/db_connection'
+    Bezel::DBConnection.migrate
+    puts 'migrated!'
+  end
+
+  desc 'seed', 'seeds the DB'
+  def seed
+    require_relative '../lib/bezel'
+    Bezel::Seed.populate
+    puts 'db seeded!'
+  end
+
+  desc 'reset', 'resets the DB and seeds it'
+  def reset
+    create
+    migrate
+    seed
+    puts 'db reset!'
+  end
+end
+
+class CLI < Thor
+  register(Generate, 'generate', 'generate <command>', 'Generates a model or controller.')
+  register(Db, 'db', 'db <command>', 'Accesses commands for the DB.')
+
+  desc 'g', 'alias of generate subcommand'
+  subcommand 'g', Generate
+
+  desc 'server', 'starts the Bezel server'
+  def server
+    require_relative '../lib/bezel'
+    Bezel::ServerConnection.start
+  end
+
+  desc 'new', 'creates a new Bezel app'
+  def new(name)
+    Dir.mkdir "./#{name}"
+    Dir.mkdir "./#{name}/config"
+
+    File.open("./#{name}/config/database.yml", 'w') do |f|
+      f.write("database: #{name}")
+    end
+
+    Dir.mkdir "./#{name}/app"
+    Dir.mkdir "./#{name}/app/models"
+    Dir.mkdir "./#{name}/app/views"
+    Dir.mkdir "./#{name}/app/controllers"
+    File.open("./#{name}/app/controllers/application_controller.rb", 'w') do |f|
+      f.write File.read(File.expand_path('../../template/app/controllers/application_controller.rb', __FILE__))
+    end
+    File.open("./#{name}/config/routes.rb", 'w') do |f|
+      f.write File.read(File.expand_path('../../template/config/routes.rb', __FILE__))
+    end
+    Dir.mkdir "./#{name}/db"
+    Dir.mkdir "./#{name}/db/migrate"
+    File.open("./#{name}/db/seeds.rb", 'w') do |f|
+      f.write File.read(File.expand_path('../../template/db/seeds.rb', __FILE__))
+    end
+    File.open("./#{name}/Gemfile", 'w') do |f|
+      f.write File.read(File.expand_path('../../template/Gemfile', __FILE__))
+    end
+  end
+end
+
+CLI.start(ARGV)
