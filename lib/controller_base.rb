@@ -43,9 +43,6 @@ class ControllerBase
     session.store_session(@res)
   end
 
-  # Populate the response with content.
-  # Set the response's content type to the given type.
-  # Raise an error if the developer tries to double render.
   def render_content(content, content_type)
     raise 'You cannot call render more than once' if already_built_response?
     @res['Content-Type'] = content_type
@@ -54,8 +51,6 @@ class ControllerBase
     session.store_session(@res)
   end
 
-  # use ERB and binding to evaluate templates
-  # pass the rendered html to render_content
   def render(template_name)
     file_name = "views/"
     file_name += "#{self.class.to_s.underscore}/"
