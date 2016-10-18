@@ -4,7 +4,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = 'bezel'
+  spec.name          = 'bezel-app'
   spec.version       = '0.0.1'
   spec.authors       = ['Keith Thompson']
   spec.email         = ['KeithM_Thompson@outlook.com']
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.executables   = 'bezel'
+  spec.executables   = 'bezel-app'
 
   spec.add_runtime_dependency 'thor', '~> 0.19'
   spec.add_runtime_dependency 'pg', '~> 0.18'
