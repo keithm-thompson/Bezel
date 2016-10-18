@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Static
   def initialize(app)
     @app = app

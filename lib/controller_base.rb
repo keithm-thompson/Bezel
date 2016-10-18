@@ -11,7 +11,6 @@ class ControllerBase
     @@csrf_auth = true
   end
 
-  # Setup the controller
   def initialize(req, res, route_params = {})
     @req = req
     @res = res
@@ -29,17 +28,18 @@ class ControllerBase
     @params['authenticity_token'] == token
   end
 
-  # Helper method to alias @already_built_response
+
   def already_built_response?
     !!@already_built_response
   end
 
-  # Set the response status code and header
+
   def redirect_to(url)
     raise 'You cannot call render more than once' if already_built_response?
     @res.status = 302
     @res['Location'] = url
     @already_built_response = true
+    
     session.store_session(@res)
   end
 
@@ -48,6 +48,7 @@ class ControllerBase
     @res['Content-Type'] = content_type
     @res.write(content)
     @already_built_response = true
+
     session.store_session(@res)
   end
 
@@ -60,16 +61,12 @@ class ControllerBase
     render_content(content, "text/html")
   end
 
-  # method exposing a `Session` object
   def session
     @session ||= Session.new(@req)
   end
 
-  # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
-
     if @@csrf_auth && @req.request_method != "GET"
-
       unless check_authenticity_token(@req.cookies['authenticity_token'])
         raise "Invalid authenticity token"
       end

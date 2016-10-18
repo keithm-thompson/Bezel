@@ -1,12 +1,9 @@
 require 'json'
-require 'byebug'
 
 class Session
-  # find the cookie for this app
-  # deserialize the cookie into a hash
   def initialize(req)
-    if req.cookies['_rails_lite_app']
-      @cookie =  JSON.parse(req.cookies['_rails_lite_app'])
+    if req.cookies['_']
+      @cookie =  JSON.parse(req.cookies['_bezel'])
     else
       @cookie = {}
     end
@@ -20,11 +17,8 @@ class Session
     @cookie[key] = val
   end
 
-  # serialize the hash into json and save in a cookie
-  # add to the responses cookies
   def store_session(res)
-    # debugger
     json_cookie = @cookie.to_json
-    res.set_cookie('_rails_lite_app', value: json_cookie, path: '/' )
+    res.set_cookie('_bezel', value: json_cookie, path: '/' )
   end
 end

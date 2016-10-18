@@ -20,7 +20,5 @@ class ShowExceptions
     response = Rack::Response.new([], 500, 'Content_Type'=> 'text/html')
     response.write(e.message)
     response.finish
-    # ["500", { 'Content-type' => 'text/html' },[e.message]]
   end
-
 end
