@@ -1,12 +1,12 @@
 require 'active_support/inflector'
-require_relative '../../../db/lib/db_connection'
+require_relative '../../lib/db_connection'
 require_relative 'associatable'
 require_relative 'searchable'
 
 class BezelrecordBase
   extend Associatable
   extend Searchable
-  
+
   def self.columns
     unless @columns
       temp_columns = DBConnection.execute2(<<-SQL)
