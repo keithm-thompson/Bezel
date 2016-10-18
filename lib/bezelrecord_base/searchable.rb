@@ -1,4 +1,4 @@
-require_relative 'db_connection'
+require_relative '../../lib/db_connection'
 
 module Searchable
   def where(params)
