@@ -4,7 +4,6 @@ require 'yaml'
 PRINT_QUERIES = ENV['PRINT_QUERIES'] == 'true'
 MIGRATIONS = Dir.glob('./db/migrate/*.sql').to_a
 
-module Bezel
   class DBConnection
     def self.app_name
       YAML.load_file(Dir.pwd + '/config/database.yml')['database']
@@ -114,4 +113,3 @@ module Bezel
       commands.each { |command| `#{command}` }
     end
   end
-end

@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'bezel-app'
-  spec.version       = '0.0.6'
+  spec.version       = '0.0.8'
   spec.authors       = ['Keith Thompson']
   spec.email         = ['KeithM_Thompson@outlook.com']
 
