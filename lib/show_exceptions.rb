@@ -1,24 +1,26 @@
 require 'erb'
-class ShowExceptions
-  attr_reader :app
+module Bezel
+  class ShowExceptions
+    attr_reader :app
 
-  def initialize(app)
-    @app = app
-  end
-
-  def call(env)
-    begin
-      app.call(env)
-    rescue Exception => e
-      render_exception(e)
+    def initialize(app)
+      @app = app
     end
-  end
 
-  private
+    def call(env)
+      begin
+        app.call(env)
+      rescue Exception => e
+        render_exception(e)
+      end
+    end
 
-  def render_exception(e)
-    response = Rack::Response.new([], 500, 'Content_Type'=> 'text/html')
-    response.write(e.message)
-    response.finish
+    private
+
+    def render_exception(e)
+      response = Rack::Response.new([], 500, 'Content_Type'=> 'text/html')
+      response.write(e.message)
+      response.finish
+    end
   end
 end
