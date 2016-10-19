@@ -98,9 +98,9 @@ module Bezel
 
       DBConnection.execute(<<-SQL, *attribute_values)
         INSERT INTO
-          #{self.class.table_name} (#{columns.join(", ")})
+          #{ self.class.table_name } (#{ columns.join(", ") })
         VALUES
-          (#{Array.new(columns.length,"?").join(", ")})
+          (#{ Array.new(columns.length,"?").join(", ") })
         SQL
         self.send(:id=,DBConnection.last_insert_row_id)
     end
@@ -108,9 +108,9 @@ module Bezel
     def update
       DBConnection.execute(<<-SQL,*attribute_values[1..-1], attribute_values.first)
         UPDATE
-          #{self.class.table_name}
+          #{ self.class.table_name }
         SET
-          #{self.class.columns[1..-1].map{|col| "#{col} = ?"}.join(", ")}
+          #{ self.class.columns[1..-1].map{ |col| "#{ col } = ?" }.join(", ") }
         WHERE
           id = ?
         SQL

@@ -24,7 +24,7 @@ module Bezel
       @params['authenticity_token']
     end
 
-    def check_authenticity_token(token = "")
+    def valid_authenticity_token?(token = "")
       @params['authenticity_token'] == token
     end
 
@@ -67,7 +67,7 @@ module Bezel
 
     def invoke_action(name)
       if @@csrf_auth && @req.request_method != "GET"
-        unless check_authenticity_token(@req.cookies['authenticity_token'])
+        unless valid_authenticity_token?(@req.cookies['authenticity_token'])
           raise "Invalid authenticity token"
         end
       end

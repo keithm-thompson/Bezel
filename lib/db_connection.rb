@@ -35,16 +35,12 @@ MIGRATIONS = Dir.glob('./db/migrate/*.sql').to_a
     end
 
     def self.ensure_version_table
-      table = nil
-
-      if table.nil?
         execute(<<-SQL)
           CREATE TABLE IF NOT EXISTS version (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NOT NULL
           );
         SQL
-      end
     end
 
     def self.execute(*args)
@@ -53,15 +49,13 @@ MIGRATIONS = Dir.glob('./db/migrate/*.sql').to_a
     end
 
     def self.instance
-      open if @db.nil?
-
-      @db
+      @db || open
     end
 
     def self.migrate
       ensure_version_table
-      to_migrate = MIGRATIONS.reject { |file| migrated?(file) }
-      to_migrate.each do |file|
+      pending_migrations = MIGRATIONS.reject { |file| migrated?(file) }
+      pending_migrations.each do |file|
         add_to_version(file)
         `psql -d #{app_name} -a -f #{file}`
       end

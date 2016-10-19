@@ -33,9 +33,9 @@ class Generate < Thor
   desc 'migration <name>', 'generates an empty sql file with a filename of the specified <name> appended to a timestamp'
   def migration(name)
 
-    ts = Time.now.to_s.split(' ').take(2).join('').split('').map(&:to_i).join
+    timestamp = Time.now.to_s.split(' ').take(2).join('').split('').map(&:to_i).join
     require 'active_support/inflector'
-    filename = "#{ts}__#{name.underscore.downcase}"
+    filename = "#{timestamp}__#{name.underscore.downcase}"
 
     File.open("./db/migrate/#{filename}.sql", 'w') do |f|
       f.write "CREATE TABLE IF NOT EXISTS #{name} (\n"
