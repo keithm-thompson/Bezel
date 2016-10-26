@@ -6,17 +6,21 @@ module Bezel
 
     def call(env)
       file_path = "." + env['PATH_INFO']
-      res = Rack::Response.new
-      extension = /\.(\w*$)/.match(file_path)[1]
-      begin
-        res['Content-Type'] = set_content_type(extension)
-        content = File.read(file_path)
-        res.write(content)
-      rescue
-        res.status = 404
+      if file_path =~ (/app\/assets/)
+        res = Rack::Response.new
+        extension = File.extname(file_path)
+          begin
+            extension = ".json" if extension == ".map"
+            res["Content-Type"] = Rack::Mime::MIME_TYPES[extension]
+            content = File.read(file_path)
+            res.write(content)
+          rescue
+            res.status = 404
+          end
+          res.finish
+      else
+        @app.call(env)
       end
-
-      res.finish
     end
   end
 

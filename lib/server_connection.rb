@@ -17,11 +17,14 @@ module Bezel
       end
 
       app = Rack::Builder.new do
-        use Bezel::ShowExceptions
         use Bezel::StaticAssets
         run asset_app
       end
-      run app
+
+      Rack::Server.start(
+        app: app,
+        Port: 3000
+      )
     end
   end
 end
