@@ -53,7 +53,7 @@ module Bezel
     end
 
     def render(template_name)
-      file_name = "views/"
+      file_name = "app/views/"
       file_name += "#{self.class.to_s.underscore}/"
       file_name += "#{template_name}.html.erb"
       content = ERB.new(File.read(file_name)).result(binding)
