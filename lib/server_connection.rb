@@ -1,8 +1,8 @@
 require 'rack'
 require './config/routes'
-require_relative './static_assets'
-require_relative './show_exceptions'
-require_relative  './db_connection'
+require_relative 'static_assets'
+require_relative 'show_exceptions'
+require_relative  'db_connection'
 
 module Bezel
   class ServerConnection

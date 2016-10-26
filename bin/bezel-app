@@ -50,7 +50,7 @@ class Db < Thor
   desc 'create', 'creates the DB'
   def create
     require_relative '../lib/db_connection'
-    Bezel::DBConnection.reset
+    DBConnection.reset
     puts 'db created!'
   end
 
@@ -58,7 +58,7 @@ class Db < Thor
   def migrate
 
     require_relative '../lib/db_connection'
-    Bezel::DBConnection.migrate
+    DBConnection.migrate
     puts 'migrated!'
   end
 
