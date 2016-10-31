@@ -38,7 +38,7 @@ If you have Ruby and PostgreSQL installed either:
   * `reset`
   
   
-  Database
+Database
 --------
 
 The bezel-app commands prefixed with 'db' interact with the Bezel Postgres database.
