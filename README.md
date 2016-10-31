@@ -48,8 +48,7 @@ The bezel-app commands prefixed with 'db' interact with the Bezel Postgres datab
   been migrated and copies them into the DB.
 * `bezel-app db seed` calls Seed::populate in db/seeds.rb, allowing you
   to quickly reset your DB to a seed file while in development.
-* `bezel-app db reset` executes all three of the above commands, saving you
-  time and energy!
+* `bezel-app db reset` executes all three of the above commands
 
 Migrations
 ----------
