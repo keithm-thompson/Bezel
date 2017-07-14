@@ -7,7 +7,7 @@ Check it out in action! My SuperMario browser game is built using it. [Stochasti
 If you have Ruby and PostgreSQL installed either:
 
 
-1. clone the [StochasticSuperMario] (https://github.com/keithm-thompson/StochasticSuperMario) repo
+1. clone the [StochasticSuperMario](https://github.com/keithm-thompson/StochasticSuperMario) repo
 2. run bundle install
 3. open your favorite developer console
 4. require 'Bezel' and any models you'd like to test with
